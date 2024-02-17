@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "noEmit": true,
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "target": "ES2022",
+    "paths": {
+      "react": ["node_modules/@types/react"],
+      "react-dom/client": ["node_modules/@types/react-dom/client"],
+      "react-router-dom": ["node_modules/@types/react-router-dom"]
+    }
+  }
+}
