@@ -7,6 +7,8 @@ const jsxOptions = require('./babel/jsx.config.js');
 const tsOptions = require('./babel/ts.config.js');
 const tsxOptions = require('./babel/tsx.config.js');
 
+const tailwindFile = fs.existsSync('./tailwind.config.js');
+
 const package = JSON.parse(
   fs.readFileSync(path.join(__dirname, './package.json'), 'utf-8'),
 );
@@ -53,23 +55,40 @@ module.exports = env => {
             options: tsxOptions,
           },
         },
+        ...(tailwindFile
+          ? [
+              {
+                test: /\.css$/,
+                exclude: [vendor, /\.module\.css$/],
+                use: [
+                  env.production ? MiniCssExtractPlugin.loader : 'style-loader',
+                  {
+                    loader: path.resolve(__dirname, '../../css-loader'),
+                    options: {
+                      url: false,
+                    },
+                  },
+                  {
+                    loader: path.resolve(__dirname, '../../postcss-loader'),
+                    options: {
+                      postcssOptions: {
+                        config: path.resolve(__dirname, './postcss.config.js'),
+                      },
+                    },
+                  },
+                ],
+              },
+            ]
+          : []),
         {
-          test: /\.css$/,
+          test: /\.module\.css$/,
           exclude: vendor,
           use: [
             env.production ? MiniCssExtractPlugin.loader : 'style-loader',
             {
               loader: path.resolve(__dirname, '../../css-loader'),
               options: {
-                url: false,
-              },
-            },
-            {
-              loader: path.resolve(__dirname, '../../postcss-loader'),
-              options: {
-                postcssOptions: {
-                  config: path.resolve(__dirname, './postcss.config.js'),
-                },
+                modules: true,
               },
             },
           ],
@@ -79,6 +98,12 @@ module.exports = env => {
 
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '*.css'],
+    },
+
+    performance: {
+      hints: false,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000,
     },
   };
 };

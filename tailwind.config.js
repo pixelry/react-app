@@ -9,10 +9,7 @@ delete colors['coolGray'];
 delete colors['blueGray'];
 
 module.exports = {
-  content: [
-    '"./**/*.{ejs,css,tsx,jsx}"',
-    `${__dirname}/**/*.{ejs,css,tsx,jsx}`,
-  ],
+  content: ['"./**/*.{ejs,css,tsx,jsx}"', `${__dirname}/index.css`],
   theme: {
     colors,
     fontSize: {
