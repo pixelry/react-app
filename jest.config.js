@@ -1,12 +1,30 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  rootDir: path.resolve('.'),
+  rootDir: path.resolve("."),
   transform: {
-    '\\.(js|ts)x?$': [
-      'babel-jest',
+    "\\.js$": [
+      "babel-jest",
       {
-        configFile: path.resolve(__dirname, './babel.config.js'),
+        configFile: path.resolve(__dirname, "./babel/js.config.js"),
+      },
+    ],
+    "\\.jsx$": [
+      "babel-jest",
+      {
+        configFile: path.resolve(__dirname, "./babel/jsx.config.js"),
+      },
+    ],
+    "\\.ts$": [
+      "babel-jest",
+      {
+        configFile: path.resolve(__dirname, "./babel/ts.config.js"),
+      },
+    ],
+    "\\.tsx$": [
+      "babel-jest",
+      {
+        configFile: path.resolve(__dirname, "./babel/tsx.config.js"),
       },
     ],
   },
