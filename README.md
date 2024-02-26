@@ -1,4 +1,4 @@
-# @pixelry/react-app
+# Pixelry - React App
 
 Modules and configurations for building production ready React applications.
 
@@ -137,6 +137,27 @@ import React from 'react';
 export function Main() {
   return <div className={'text-red-500'}>Hello World!</div>;
 }
+```
+
+You can modify the tailwind config export to add any theming or customizations specific to your project.
+
+`./tailwind.config.ts`
+
+```js
+const coreTailwind = require('@pixelry/react-app/tailwind.config.js');
+
+module.exports = {
+  ...coreTailwind,
+  theme: {
+    ...coreTailwind.theme,
+    colors: {
+      base,
+      light: coreTailwind.theme.colors.slate['500'],
+      dark: coreTailwind.theme.colors.slate['700'],
+      ...coreTailwind.theme.colors,
+    },
+  },
+};
 ```
 
 ## Unit Tests
