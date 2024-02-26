@@ -1,6 +1,6 @@
 {
   "name": "@pixelry/react-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Modules and configurations for building production ready React applications.",
   "author": "Pixelry.com (https://github.com/pixelry)",
   "license": "MIT",
