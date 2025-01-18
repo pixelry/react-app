@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const { existsSync } = require('fs');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const common = require('./webpack.common.config');
-const htmlFile = fs.existsSync('./index.ejs');
 const tailwindFile = fs.existsSync('./tailwind.config.js');
 
 const package = JSON.parse(
@@ -16,12 +16,27 @@ const deps = Object.keys(package.dependencies);
 const vendor = new RegExp(`[\\/]node_modules[\\/](${deps.join('|')})`);
 
 module.exports = env => {
+  // get the entry point file path
+  let entry = './src/index.tsx';
+  if (!existsSync(entry)) {
+    entry = './index.tsx';
+  }
+
+  // get the template file path
+  let template = './src/index.ejs';
+  if (!existsSync(template)) {
+    template = './index.ejs';
+  }
+  if (!existsSync(template)) {
+    template = path.resolve(__dirname, './index.ejs');
+  }
+
   return {
     ...common(env),
     entry: {
       main: {
         import: [
-          './index.tsx',
+          entry,
           ...(tailwindFile ? [path.resolve(__dirname, './index.css')] : []),
         ],
       },
@@ -58,9 +73,7 @@ module.exports = env => {
 
       new HtmlWebpackPlugin({
         minify: { collapseWhitespace: false },
-        template: htmlFile
-          ? './index.ejs'
-          : path.resolve(__dirname, './index.ejs'),
+        template,
         filename: 'index.html',
         templateParameters: {
           reactDiv: '<div id="main"></div>',
