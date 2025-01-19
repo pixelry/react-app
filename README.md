@@ -2,7 +2,7 @@
 
 Modules and configurations for building production ready React applications.
 
-- React 18 with React Router
+- React 19 with React Router
 - CSS Modules and Tailwind CSS
 - Production build with hash named vendor bundling
 - Customizable HTML
@@ -15,6 +15,8 @@ At Pixelry we have many React applications. By standardizing configuration and b
 This is an opinionated setup, we're not trying to push a standard, we're simply sharing how we work. Feel free to use as is, fork, or look at the code to see what you can copy. We avoid a custom CLI (do you really need another abstraction?). You provide config files that extend the default ones we provide. You add scripts. No magic.
 
 Installs React, React Router, Tailwind, TypeScript, Webpack, Jest, and their dependencies and utilities (so you don't have to).
+
+Note: We updated the package version to match React going forward. As such v19.x.x uses React 19 while v1.x.x uses React 18. 
 
 ## Quick Start
 
@@ -53,7 +55,7 @@ Add a start script to the package json file.
 
 Create an index file.
 
-`./index.tsx`
+`./index.tsx` or `./src/index.tsx`
 
 ```tsx
 import React from 'react';
@@ -201,7 +203,7 @@ All files contained in the root `static` folder will be copied to site root.
 
 A default EJS template is provided for HTML generation. This can be overridden by adding an EJS index file.
 
-`./index.ejs`
+`./index.ejs` or `./src/index.ejs`
 
 ```html
 <!doctype html>
@@ -233,7 +235,7 @@ Render the HTML at build time to make search engine friendly routes.
 
 Create a server file that renders to a string.
 
-`./server.tsx`
+`./server.tsx` or `./src/server.tsx`
 
 ```tsx
 import React from 'react';
@@ -263,6 +265,8 @@ const render = require('@pixelry/react-app/render');
 
 // pass array of routes to render
 render(['/', '/about', '/contact']);
+
+process.exit();
 ```
 
 Add a render script and make sure the prod scripts are updated.
@@ -303,4 +307,16 @@ dist
 |____sitemap.txt
 |____vendor-2e325.js
 |____vendor-2e325.js.LICENSE.txt
+```
+
+## Deprecation Warnings
+
+If you see deprecation warnings for `inflight` and `glob` we are waiting for `jest` to fix this. In the mean time you can fix this in your local package file by added the following.
+
+`package.json`
+
+```json
+"overrides": {
+  "glob": "10.4.5"
+}
 ```
