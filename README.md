@@ -123,7 +123,7 @@ export function Main() {
 
 Create a Tailwind config file to enable Tailwind CSS.
 
-`./tailwind.config.ts`
+`./tailwind.config.js`
 
 ```js
 module.exports = require('@pixelry/react-app/tailwind.config.js');
@@ -143,7 +143,7 @@ export function Main() {
 
 You can modify the tailwind config export to add any theming or customizations specific to your project.
 
-`./tailwind.config.ts`
+`./tailwind.config.js`
 
 ```js
 const coreTailwind = require('@pixelry/react-app/tailwind.config.js');
