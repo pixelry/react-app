@@ -277,7 +277,7 @@ render(['/', '/about', '/contact']);
 process.exit();
 ```
 
-Add a render script and make sure the prod scripts are updated.
+Add a render script and make sure the prod scripts are updated. Note that both the application build and server build must be run before running the render script.
 
 `./package.json`
 
