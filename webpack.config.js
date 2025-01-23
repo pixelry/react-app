@@ -7,7 +7,6 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const common = require('./webpack.common.config');
-const tailwindFile = fs.existsSync('./tailwind.config.js');
 
 const package = JSON.parse(
   fs.readFileSync(path.join(__dirname, './package.json'), 'utf-8'),
@@ -15,29 +14,45 @@ const package = JSON.parse(
 const deps = Object.keys(package.dependencies);
 const vendor = new RegExp(`[\\/]node_modules[\\/](${deps.join('|')})`);
 
-module.exports = env => {
+module.exports = (env, options) => {
   // get the entry point file path
-  let entry = './src/index.tsx';
-  if (!existsSync(entry)) {
-    entry = './index.tsx';
+  let entry = options?.entry;
+  if (!entry) {
+    entry = './src/index.tsx';
+    if (!existsSync(entry)) {
+      entry = './index.tsx';
+    }
   }
 
   // get the template file path
-  let template = './src/index.ejs';
-  if (!existsSync(template)) {
-    template = './index.ejs';
-  }
-  if (!existsSync(template)) {
-    template = path.resolve(__dirname, './index.ejs');
+  let template = options?.template;
+  if (!template) {
+    template = './src/index.ejs';
+    if (!existsSync(template)) {
+      template = './index.ejs';
+    }
+    if (!existsSync(template)) {
+      template = path.resolve(__dirname, './index.ejs');
+    }
   }
 
+  // get the tailwind file path
+  let tailwind = options?.tailwind;
+  if (!tailwind) {
+    tailwind = './tailwind.config.js';
+  }
+  const useTailwind = fs.existsSync(tailwind);
+
+  // get the css modules filename
+  let css = options?.css ?? '*.modules.css';
+
   return {
-    ...common(env),
+    ...common(env, options),
     entry: {
       main: {
         import: [
           entry,
-          ...(tailwindFile ? [path.resolve(__dirname, './index.css')] : []),
+          ...(useTailwind ? [path.resolve(__dirname, './index.css')] : []),
         ],
       },
     },

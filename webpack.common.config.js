@@ -7,15 +7,22 @@ const jsxOptions = require('./babel/jsx.config.js');
 const tsOptions = require('./babel/ts.config.js');
 const tsxOptions = require('./babel/tsx.config.js');
 
-const tailwindFile = fs.existsSync('./tailwind.config.js');
-
 const package = JSON.parse(
   fs.readFileSync(path.join(__dirname, './package.json'), 'utf-8'),
 );
 const deps = Object.keys(package.dependencies);
 const vendor = new RegExp(`[\\/]node_modules[\\/](${deps.join('|')})`);
 
-module.exports = env => {
+module.exports = (env, options) => {
+  const cssModules = options?.cssModules ?? /\.module\.css$/;
+
+  // get the tailwind file path
+  let tailwind = options?.tailwind;
+  if (!tailwind) {
+    tailwind = './tailwind.config.js';
+  }
+  const useTailwind = fs.existsSync(tailwind);
+
   return {
     mode: env.production ? 'production' : 'development',
     devtool: env.production ? undefined : 'source-map',
@@ -55,11 +62,11 @@ module.exports = env => {
             options: tsxOptions,
           },
         },
-        ...(tailwindFile
+        ...(useTailwind
           ? [
               {
                 test: /\.css$/,
-                exclude: [vendor, /\.module\.css$/],
+                exclude: [vendor, cssModules],
                 use: [
                   env.production ? MiniCssExtractPlugin.loader : 'style-loader',
                   {
@@ -81,7 +88,7 @@ module.exports = env => {
             ]
           : []),
         {
-          test: /\.module\.css$/,
+          test: cssModules,
           exclude: vendor,
           use: [
             env.production ? MiniCssExtractPlugin.loader : 'style-loader',

@@ -16,7 +16,7 @@ This is an opinionated setup, we're not trying to push a standard, we're simply 
 
 Installs React, React Router, Tailwind, TypeScript, Webpack, Jest, and their dependencies and utilities (so you don't have to).
 
-Note: We updated the package version to match React going forward. As such v19.x.x uses React 19 while v1.x.x uses React 18. 
+Note: We updated the package version to match React going forward. As such v19.x.x uses React 19 while v1.x.x uses React 18.
 
 ## Quick Start
 
@@ -104,7 +104,7 @@ Imported CSS files ending in `.module.css` are bundled as CSS modules.
 ```tsx
 import React from 'react';
 
-import styles from './main.module.css';
+import * as styles from './main.module.css';
 
 export function Main() {
   return <div className={styles.main}>Hello World!</div>;
@@ -117,6 +117,14 @@ export function Main() {
 .main {
   font-size: 50px;
 }
+```
+
+To make typescript aware of css modules add a declaration to a `*.d.ts` file.
+
+`./src/types.d.ts`
+
+```typescript
+declare module '*.module.css';
 ```
 
 ## Tailwind CSS
@@ -319,4 +327,48 @@ If you see deprecation warnings for `inflight` and `glob` we are waiting for `je
 "overrides": {
   "glob": "10.4.5"
 }
+```
+
+## Configuration Options
+
+Webpack can be optionally configured to override some file paths and patterns.
+
+`webpack.config.js`
+
+```js
+const config = require('@pixelry/react-app/webpack.config');
+
+module.exports = env => {
+  return config(env, {
+    // entry is the main application entry point
+    // defaults to "./index.tsx" or "./src/index.tsx"
+    entry: './src/app/index.tsx',
+    // template is the application html template
+    // defaults to "./index.ejs" or "./src/index.ejs"
+    template: './src/app/index.ejs',
+    // tailwind is the path to the tailwind configuration file
+    // defaults to "./tailwind.config.js"
+    tailwind: './build/tailwind.config.js',
+    // cssModules is a regex for matching css module file loader
+    // default: /\.module\.css$/
+    cssModules: /\.m\.css$/,
+  });
+};
+```
+
+`webpack.server.config.js`
+
+```js
+const config = require('@pixelry/react-app/webpack.server.config');
+
+module.exports = env => {
+  return config(env, {
+    // entry is the statically rendered entry point
+    // defaults to "./server.tsx" or "./src/server.tsx"
+    entry: './src/app/static.tsx',
+    // cssModules is a regex for matching css module file loader
+    // default: /\.module\.css$/
+    cssModules: /\.m\.css$/,
+  });
+};
 ```
