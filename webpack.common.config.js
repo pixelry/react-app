@@ -16,13 +16,6 @@ const vendor = new RegExp(`[\\/]node_modules[\\/](${deps.join('|')})`);
 module.exports = (env, options) => {
   const cssModules = options?.cssModules ?? /\.module\.css$/;
 
-  // get the tailwind file path
-  let tailwind = options?.tailwind;
-  if (!tailwind) {
-    tailwind = './tailwind.config.js';
-  }
-  const useTailwind = fs.existsSync(tailwind);
-
   return {
     mode: env.production ? 'production' : 'development',
     devtool: env.production ? undefined : 'source-map',
@@ -62,31 +55,27 @@ module.exports = (env, options) => {
             options: tsxOptions,
           },
         },
-        ...(useTailwind
-          ? [
-              {
-                test: /\.css$/,
-                exclude: [vendor, cssModules],
-                use: [
-                  env.production ? MiniCssExtractPlugin.loader : 'style-loader',
-                  {
-                    loader: path.resolve(__dirname, '../../css-loader'),
-                    options: {
-                      url: false,
-                    },
-                  },
-                  {
-                    loader: path.resolve(__dirname, '../../postcss-loader'),
-                    options: {
-                      postcssOptions: {
-                        config: path.resolve(__dirname, './postcss.config.js'),
-                      },
-                    },
-                  },
-                ],
+        {
+          test: /\.css$/,
+          exclude: [vendor, cssModules],
+          use: [
+            env.production ? MiniCssExtractPlugin.loader : 'style-loader',
+            {
+              loader: path.resolve(__dirname, '../../css-loader'),
+              options: {
+                url: false,
               },
-            ]
-          : []),
+            },
+            {
+              loader: path.resolve(__dirname, '../../postcss-loader'),
+              options: {
+                postcssOptions: {
+                  config: path.resolve(__dirname, './postcss.config.js'),
+                },
+              },
+            },
+          ],
+        },
         {
           test: cssModules,
           exclude: vendor,

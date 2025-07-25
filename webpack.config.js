@@ -36,25 +36,10 @@ module.exports = (env, options) => {
     }
   }
 
-  // get the tailwind file path
-  let tailwind = options?.tailwind;
-  if (!tailwind) {
-    tailwind = './tailwind.config.js';
-  }
-  const useTailwind = fs.existsSync(tailwind);
-
-  // get the css modules filename
-  let css = options?.css ?? '*.modules.css';
-
   return {
     ...common(env, options),
     entry: {
-      main: {
-        import: [
-          entry,
-          ...(useTailwind ? [path.resolve(__dirname, './index.css')] : []),
-        ],
-      },
+      main: entry,
     },
 
     output: {

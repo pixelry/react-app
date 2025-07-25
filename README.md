@@ -18,6 +18,8 @@ Installs React, React Router, Tailwind, TypeScript, Webpack, Jest, and their dep
 
 Note: We updated the package version to match React going forward. As such v19.x.x uses React 19 while v1.x.x uses React 18.
 
+Note: v19.1.0 upgrades to Tailwind 4. You will need to import a css file with the `@import tailwindcss;` directive. See the Tailwind section below for details.
+
 ## Quick Start
 
 Installation
@@ -129,12 +131,27 @@ declare module '*.module.css';
 
 ## Tailwind CSS
 
-Create a Tailwind config file to enable Tailwind CSS.
+Create a Tailwind config file and include a tailwind css file to enable Tailwind CSS.
 
 `./tailwind.config.js`
 
 ```js
 module.exports = require('@pixelry/react-app/tailwind.config.js');
+```
+
+`./src/index.css`
+
+```css
+@import 'tailwindcss';
+@config '../tailwind.config.js'; /* only necessary for legacy tailwind config */
+```
+
+`./src/index.tsx`
+
+```tsx
+...
+import './index.css';
+...
 ```
 
 Use Tailwind CSS in any component.
@@ -149,7 +166,7 @@ export function Main() {
 }
 ```
 
-You can modify the tailwind config export to add any theming or customizations specific to your project.
+Legacy tailwind theming or customizations can be provided by the config file. In Tailwind 4 you should prefer "CSS-first" config and avoid using the JavaScript config file going forward.
 
 `./tailwind.config.js`
 
